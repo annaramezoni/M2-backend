@@ -14,13 +14,11 @@ describe("API 4 - calculates the insurance premium discount rate of drives", () 
       error: "age is invalid",
     });
   });
-
   test("if age is a string, throw error message", () => {
     expect(calcDiscountRate({ age: "eighteen", experience: 4 })).toEqual({
       error: "age is invalid",
     });
   });
-
   test("if experience is negative or invalid, throw error message", () => {
     expect(calcDiscountRate({ age: 21, experience: -1 })).toEqual({
       error: "experience is invalid",
@@ -31,28 +29,29 @@ describe("API 4 - calculates the insurance premium discount rate of drives", () 
       error: "experience is invalid",
     });
   });
-  test("discount can't be over 20%", () => {
-    const result = calcDiscountRate({ age: 50, experience: 30 });
-    expect(result.discountRate).toBeLessThanOrEqual(0.2);
-  });
+
   test("if driver's experience is 5, but age is 24, no discount", () => {
     const result = calcDiscountRate({ age: 24, experience: 5 });
-    expect(result.discountRate).toBe(0);
+    expect(result).toBe(0);
   });
   test("if driver is 25 and has 5 year of experience, discount = 10%", () => {
     const result = calcDiscountRate({ age: 25, experience: 5 });
-    expect(result.discountRate).toBe(0.1);
+    expect(result).toBe(0.1);
   });
   test("if driver is 25 and has 4 years of experience, discount = 5%", () => {
     const result = calcDiscountRate({ age: 25, experience: 4 });
-    expect(result.discountRate).toBe(0.05);
+    expect(result).toBe(0.05);
   });
   test("if the driver is 40, and experience is 5, discount is 15%", () => {
     const result = calcDiscountRate({ age: 40, experience: 6 });
-    expect(result.discountRate).toBe(0.15);
+    expect(result).toBe(0.15);
   });
   test("if the driver is 39 and experience is 10, discount is 15%", () => {
     const result = calcDiscountRate({ age: 39, experience: 10 });
-    expect(result.discountRate).toBe(0.15);
+    expect(result).toBe(0.15);
+  });
+  test("discount can't be over 20%", () => {
+    const result = calcDiscountRate({ age: 50, experience: 30 });
+    expect(result).toBeLessThanOrEqual(0.2);
   });
 });
