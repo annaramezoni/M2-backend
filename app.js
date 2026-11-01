@@ -32,22 +32,22 @@ export function calcDiscountRate(driver) {
     return { error: "experience is invalid" };
   }
   if (age < 25) {
-    return discountRate;
+    return { discount_rate: discountRate };
   }
   if (age >= 25) {
-    discountRate += 0.05;
+    discountRate += 5;
   }
   if (age >= 40) {
-    discountRate += 0.05;
+    discountRate += 5;
   }
   if (exp >= 5) {
-    discountRate += 0.05;
+    discountRate += 5;
   }
   if (exp >= 10) {
-    discountRate += 0.05;
+    discountRate += 5;
   }
-  if (discountRate <= 0.2) {
-    return Number(discountRate.toFixed(2));
+  if (discountRate <= 20) {
+    return { discount_rate: discountRate };
   }
 }
 console.log(calcDiscountRate(driver));
