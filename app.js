@@ -15,8 +15,8 @@ app.get("/", (req, res) => {
 //API 3
 
 //API 4
-export const sum = (num1, num2) => {
-  return num1 + num2;
+export const calcDiscountRate = () => {
+  return;
 };
 app.get("/sum", (req, res) => {
   res.send({ result: sum(2, 2) });
