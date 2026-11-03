@@ -1,9 +1,10 @@
 import express from "express";
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello! Welcome to our API!");
+  res.status(200).send("Hello! Welcome to our API!");
 });
 
 // ======== ENDPOINTS ======== //
@@ -15,24 +16,29 @@ app.get("/", (req, res) => {
 //API 3
 
 //API 4
-//dummy data
-const driver = {
-  age: 30,
-  experience: 5,
-};
+
+app.post("/discount", (req, res) => {
+  const result = calcDiscountRate(req.body);
+  res.status(200).json(result);
+});
+
 export function calcDiscountRate(driver) {
   const age = driver.age;
   const exp = driver.experience;
   let discountRate = 0;
 
-  if (driver.age < 0 || isNaN(driver.age)) {
+  if (driver.age < 0 || isNaN(driver.age) || typeof driver.age !== "number") {
     return { error: "age is invalid" };
   }
-  if (driver.experience < 0 || isNaN(driver.experience)) {
+  if (
+    driver.experience < 0 || // isNaN() catches invalid numeric values.
+    isNaN(driver.experience) || //isNaN() catches invalid numeric values.
+    typeof driver.experience !== "number" //typeof !== "number" rejects strings, null and undefined.
+  ) {
     return { error: "experience is invalid" };
   }
   if (age < 25) {
-    return { discount_rate: discountRate };
+    return { discount_rate: discountRate }; //even if the driver has 5 years of experience, there's no discount if under 25
   }
   if (age >= 25) {
     discountRate += 5;
@@ -50,9 +56,5 @@ export function calcDiscountRate(driver) {
     return { discount_rate: discountRate };
   }
 }
-console.log(calcDiscountRate(driver));
-app.get("/discount", (req, res) => {
-  res.send(calcDiscountRate());
-});
 
 export default app;
