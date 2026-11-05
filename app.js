@@ -2,13 +2,16 @@ import express from "express";
 
 const app = express();
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Hello! Welcome to our API!");
 });
 
 // ======== ENDPOINTS ======== //
 
-//API 1
+// API 1
+
 export function calculateCarValue(model, year) {
   if (
     model === null ||
@@ -46,10 +49,8 @@ export function calculateCarValue(model, year) {
   };
 }
 
-app.get("/car-value", (req, res) => {
-  const model = req.query.model;
-
-  const year = Number(req.query.year);
+app.post("/car-value", (req, res) => {
+  const { model, year } = req.body;
 
   const result = calculateCarValue(model, year);
 
