@@ -15,7 +15,7 @@ describe("API 4 - calculates the insurance premium discount rate of drives", () 
       error: "age is invalid",
     });
   });
-  test("if experience is negative or invalid, throw error message", () => {
+  test("if experience is negative, throw error message", () => {
     expect(calcDiscountRate({ age: 21, experience: -1 })).toEqual({
       error: "experience is invalid",
     });

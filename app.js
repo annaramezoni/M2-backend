@@ -3,11 +3,24 @@ import express from "express";
 const app = express();
 app.use(express.json());
 
+function checkIfNumberIsValid(number) {
+  if (
+    number < 0 || // catches negative numbers.
+    isNaN(number) || //isNaN() catches invalid numeric values.
+    typeof number !== "number" || //typeof !== "number" rejects strings, null and undefined.
+    !Number.isInteger(number)
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// ======== ENDPOINTS ======== //
+
 app.get("/", (req, res) => {
   res.status(200).send("Hello! Welcome to our API!");
 });
-
-// ======== ENDPOINTS ======== //
 
 //API 1
 
@@ -23,38 +36,35 @@ app.post("/discount", (req, res) => {
 });
 
 export function calcDiscountRate(driver) {
-  const age = driver.age;
-  const exp = driver.experience;
+  const driverAge = driver.age;
+  const driverExperience = driver.experience;
   let discountRate = 0;
 
-  if (driver.age < 0 || isNaN(driver.age) || typeof driver.age !== "number") {
+  const ageValidation = checkIfNumberIsValid(driverAge);
+  if (!ageValidation) {
     return { error: "age is invalid" };
   }
-  if (
-    driver.experience < 0 || // isNaN() catches invalid numeric values.
-    isNaN(driver.experience) || //isNaN() catches invalid numeric values.
-    typeof driver.experience !== "number" //typeof !== "number" rejects strings, null and undefined.
-  ) {
+  const expValidation = checkIfNumberIsValid(driverExperience);
+  if (!expValidation) {
     return { error: "experience is invalid" };
   }
-  if (age < 25) {
-    return { discount_rate: discountRate }; //even if the driver has 5 years of experience, there's no discount if under 25
+
+  if (driverAge < 25) {
+    return { discount_rate: 0 }; //even if the driver has 5 years of driverExperience, there's no discount if under 25
   }
-  if (age >= 25) {
+  if (driverAge >= 25) {
     discountRate += 5;
   }
-  if (age >= 40) {
+  if (driverAge >= 40) {
     discountRate += 5;
   }
-  if (exp >= 5) {
+  if (driverExperience >= 5) {
     discountRate += 5;
   }
-  if (exp >= 10) {
+  if (driverExperience >= 10) {
     discountRate += 5;
   }
-  if (discountRate <= 20) {
-    return { discount_rate: discountRate };
-  }
+  return { discount_rate: discountRate };
 }
 
 export default app;
