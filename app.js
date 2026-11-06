@@ -16,6 +16,14 @@ function checkIfNumberIsValid(number) {
   }
 }
 
+function checkIfObjectIsValid(object) {
+  if (!object || typeof object !== "object" || Array.isArray(object)) {
+    return false;
+  }
+
+  return true;
+}
+
 // ======== ENDPOINTS ======== //
 
 app.get("/", (req, res) => {
@@ -79,14 +87,26 @@ app.post("/car-value", (req, res) => {
 
 app.post("/discount", (req, res) => {
   const result = calcDiscountRate(req.body);
+
+  if (result.error) {
+    return res.status(400).json(result);
+  }
+
   res.status(200).json(result);
 });
 
 export function calcDiscountRate(driver) {
+  //Object validation - Initial validation before accessing the properties
+  const objectValidation = checkIfObjectIsValid(driver);
+
+  if (!objectValidation) {
+    return { error: "invalid entry" };
+  }
   const driverAge = driver.age;
   const driverExperience = driver.experience;
   let discountRate = 0;
 
+  //Property validation
   const ageValidation = checkIfNumberIsValid(driverAge);
   if (!ageValidation) {
     return { error: "age is invalid" };
@@ -95,7 +115,6 @@ export function calcDiscountRate(driver) {
   if (!expValidation) {
     return { error: "experience is invalid" };
   }
-
   if (driverAge < 25) {
     return { discount_rate: 0 }; //even if the driver has 5 years of driverExperience, there's no discount if under 25
   }

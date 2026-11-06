@@ -90,6 +90,17 @@ describe("API 4 - calculates the insurance premium discount rate of drives", () 
       error: "experience is invalid",
     });
   });
+  //checking the object as a whole
+  test("if driver is null, return invalid entry", () => {
+    expect(calcDiscountRate(null)).toEqual({
+      error: "invalid entry",
+    });
+  });
+  test("if driver is undefined, return invalid entry", () => {
+    expect(calcDiscountRate(undefined)).toEqual({
+      error: "invalid entry",
+    });
+  });
   // boundary cases
   test("if driver's experience is 5, but age is 24, no discount", () => {
     const result = calcDiscountRate({ age: 24, experience: 5 });
