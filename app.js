@@ -14,8 +14,18 @@ app.get("/", (req, res) => {
 //API 2
 
 app.post("/driver-rating", (req, res) => {
-  const riskRating = (calcRiskRating(req.body));
-  res.status(200).json(riskRating);
+  try {
+    const risk_rating = (calcRiskRating(req.body));
+
+    if (risk_rating.error) {
+      return res.status(400).json(risk_rating);
+    }
+
+    res.status(200).json(risk_rating);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong." })
+  }
 })
 
 const keywords = ['collide', 'crash', 'scratch', 'bump', 'smash'];
@@ -29,16 +39,16 @@ function containsKeywords(text) {
 }
 
 export function calcRiskRating(accident) {
-  const claim = accident.claim;
-  let riskRating = 0;
+  const claim_history = accident.claim;
+  let risk_rating = 0;
 
-  if (typeof claim !== 'string') {
+  if (typeof claim_history !== 'string') {
     return { error: "invalid entry" };
   }
 
-  riskRating += containsKeywords(claim);
+  risk_rating += containsKeywords(claim_history);
 
-  return Math.min(riskRating, 5); // keeps the rating to a maximum of 5
+  return Math.min(risk_rating, 5); // keeps the rating to a maximum of 5
 }
 
 //API 3
