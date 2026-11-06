@@ -1,3 +1,4 @@
+import { calcRiskRating } from "./app.js";
 import { calculateCarValue } from "./app.js";
 import { calcDiscountRate } from "./app.js";
 
@@ -52,6 +53,68 @@ describe("API 1 - Car Value Calculation", () => {
 });
 
 //API 2
+describe("API 2 - converts customer insurance claims to a 'risk rating'", () => {
+// Boundary cases
+  // Making sure the 5 keyword limit works as expected
+  test("confirm working API: Exactly 5 keywords returns 5", () => {
+    expect(calcRiskRating({ claim: "Crash, smash, bump, collide, scratch." })).toEqual(5);
+  });
+
+  test("confirm working API: More than 5 keywords still returns 5", () => {
+    expect(calcRiskRating({ claim: "Crash, smash, bump, collide, scratch, crash" })).toEqual(5);
+  });
+
+  // String testing
+  test("confirm working API: adding letters to the keyword still returns 1", () => {
+    expect(calcRiskRating({ claim: "The car crashed and smashed! Then it bumped and collided with another car, scratching and smashing it." })).toEqual(5);
+  });
+
+  test("confirm working API: keywords spelled incorrectly or missing a letter do not return +1", () => {
+    expect(calcRiskRating({ claim: "Crsh, smah, ump, colde, scrtch." })).toEqual(1);
+  });
+
+  test("confirm working API: keywords next to each other without a space return only 1", () => {
+    expect(calcRiskRating({ claim: "Crashsmash." })).toEqual(1);
+  });
+// ----------------------------------------------------------------------------------------------------------------------
+// Positive test cases (expected behaviour)
+  // Normal behaviour
+  test("confirm working API: One keyword returns 1", () => {
+    expect(calcRiskRating({ claim: "I got into a car crash." })).toEqual(1);
+  });
+});
+  test("confirm working API: No keywords returns 1", () => {
+    expect(calcRiskRating({ claim: "My car broke." })).toEqual(1);
+  });
+
+  test("confirm working API: A repeated keyword is returned multiple times", () => {
+    expect(calcRiskRating({ claim: "I got in a car crash crash crash." })).toEqual(3);
+  });
+
+  // Alternate punctuation
+  test("confirm working API: Upper and mixed case strings still work as intended", () => {
+    expect(calcRiskRating({ claim: "The car cRaShEd. CRASHED. crashed..." })).toEqual(3);
+  });
+
+  test("confirm working API: Punctuation and spaces added between words work as intended", () => {
+    expect(calcRiskRating({ claim: "The car crashed! Then it bumped like   CRASH." })).toEqual(3);
+  });
+// ----------------------------------------------------------------------------------------------------------------------
+// Negative test cases
+  test("error expected: returns an error when claim is missing", () => {
+    expect(calcRiskRating({})).toEqual({ error: "invalid entry" });
+  });
+  test("error expected: returns an error when claim is not a string", () => {
+    expect(calcRiskRating({ claim: 1234 })).toEqual({ error: "invalid entry" });
+  });
+
+  test("error expected: returns an error when claim is null", () => {
+    expect(calcRiskRating({ claim: null })).toEqual({ error: "invalid entry" });
+  });
+  
+  test("error expected: returns the default value when claim is an empty string", () => {
+    expect(calcRiskRating({ claim: "" })).toEqual(1);
+  });
 
 //API 3
 
