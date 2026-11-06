@@ -3,6 +3,7 @@ import { sum, calcRiskRating } from "./app.js";
 // API 1
 
 //API 2
+describe("API 2 - converts customer insurance claims to a 'risk rating'", () => {
 // Boundary cases
   // Making sure the 5 keyword limit works as expected
   test("confirm working API: Exactly 5 keywords returns 5", () => {
@@ -16,7 +17,7 @@ import { sum, calcRiskRating } from "./app.js";
   test("confirm working API: adding letters to the keyword still returns +1", () => {
     expect(calcRiskRating({ claim: "The car crashed and smashed! Then it bumped and collided with another car, scratching and smashing it." })).toEqual(5);
   });
-  test("confirm working API: keywords missing a letter return 0", () => {
+  test("confirm working API: keywords spelled incorrectly or missing a letter return 0", () => {
     expect(calcRiskRating({ claim: "Crash, smah, ump, colde, scrtch." })).toEqual(1);
   });
   test("confirm working API: keywords next to each other without a space return 1", () => {
@@ -24,7 +25,6 @@ import { sum, calcRiskRating } from "./app.js";
   });
 // ----------------------------------------------------------------------------------------------------------------------
 // Positive test cases (expected behaviour)
-describe("API 2 - converts customer insurance claims to a 'risk rating'", () => {
   // Normal behaviour
   test("confirm working API: One keyword returns 1", () => {
     expect(calcRiskRating({ claim: "I got into a car crash." })).toEqual(1);
@@ -52,11 +52,9 @@ describe("API 2 - converts customer insurance claims to a 'risk rating'", () => 
   });
 // ----------------------------------------------------------------------------------------------------------------------
 // Negative test cases
-describe("API 2 - fails to convert customer insurance claims to a 'risk rating'", () => {
   test("error expected: returns an error when claim is missing", () => {
     expect(calcRiskRating({})).toEqual({ error: "invalid entry" });
   });
-});
   test("error expected: returns an error when claim is not a string", () => {
     expect(calcRiskRating({ claim: 1234 })).toEqual({ error: "invalid entry" });
   });
