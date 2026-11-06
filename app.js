@@ -39,16 +39,16 @@ function containsKeywords(text) {
 }
 
 export function calcRiskRating(accident) {
-  const claim_history = accident.claim;
-  let risk_rating = 0;
+  const claim_history = accident?.claim;
+  let risk_rating = 1;
 
   if (typeof claim_history !== 'string') {
     return { error: "invalid entry" };
   }
 
-  risk_rating += containsKeywords(claim_history);
+  risk_rating = containsKeywords(claim_history);
 
-  return Math.min(risk_rating, 5); // keeps the rating to a maximum of 5
+  return Math.max(1, Math.min(risk_rating, 5)); // keeps the rating to a minimum of 1, maximum of 5
 }
 
 //API 3

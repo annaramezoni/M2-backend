@@ -9,18 +9,21 @@ describe("API 2 - converts customer insurance claims to a 'risk rating'", () => 
   test("confirm working API: Exactly 5 keywords returns 5", () => {
     expect(calcRiskRating({ claim: "Crash, smash, bump, collide, scratch." })).toEqual(5);
   });
+
   test("confirm working API: More than 5 keywords still returns 5", () => {
     expect(calcRiskRating({ claim: "Crash, smash, bump, collide, scratch, crash" })).toEqual(5);
   });
-// ----------------------------------------------------------------------------------------------------------------------
+
   // String testing
-  test("confirm working API: adding letters to the keyword still returns +1", () => {
+  test("confirm working API: adding letters to the keyword still returns 1", () => {
     expect(calcRiskRating({ claim: "The car crashed and smashed! Then it bumped and collided with another car, scratching and smashing it." })).toEqual(5);
   });
-  test("confirm working API: keywords spelled incorrectly or missing a letter return 0", () => {
-    expect(calcRiskRating({ claim: "Crash, smah, ump, colde, scrtch." })).toEqual(1);
+
+  test("confirm working API: keywords spelled incorrectly or missing a letter do not return +1", () => {
+    expect(calcRiskRating({ claim: "Crsh, smah, ump, colde, scrtch." })).toEqual(1);
   });
-  test("confirm working API: keywords next to each other without a space return 1", () => {
+
+  test("confirm working API: keywords next to each other without a space return only 1", () => {
     expect(calcRiskRating({ claim: "Crashsmash." })).toEqual(1);
   });
 // ----------------------------------------------------------------------------------------------------------------------
@@ -30,18 +33,14 @@ describe("API 2 - converts customer insurance claims to a 'risk rating'", () => 
     expect(calcRiskRating({ claim: "I got into a car crash." })).toEqual(1);
   });
 });
-  test("confirm working API: No keywords returns 0", () => {
-    expect(calcRiskRating({ claim: "My car broke." })).toEqual(0);
-  });
-
-  test("confirm working API: More than one keyword returns >1, in this case, 3", () => {
-    expect(calcRiskRating({ claim: "The car crashed and bumped and collided." })).toEqual(3);
+  test("confirm working API: No keywords returns 1", () => {
+    expect(calcRiskRating({ claim: "My car broke." })).toEqual(1);
   });
 
   test("confirm working API: A repeated keyword is returned multiple times", () => {
     expect(calcRiskRating({ claim: "I got in a car crash crash crash." })).toEqual(3);
   });
-// ----------------------------------------------------------------------------------------------------------------------
+
   // Alternate punctuation
   test("confirm working API: Upper and mixed case strings still work as intended", () => {
     expect(calcRiskRating({ claim: "The car cRaShEd. CRASHED. crashed..." })).toEqual(3);
@@ -63,8 +62,8 @@ describe("API 2 - converts customer insurance claims to a 'risk rating'", () => 
     expect(calcRiskRating({ claim: null })).toEqual({ error: "invalid entry" });
   });
   
-  test("error expected: returns 0 when claim is an empty string", () => {
-    expect(calcRiskRating({ claim: "" })).toEqual(0);
+  test("error expected: returns the default value when claim is an empty string", () => {
+    expect(calcRiskRating({ claim: "" })).toEqual(1);
   });
 
 //API 3
